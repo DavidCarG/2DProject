@@ -27,13 +27,7 @@ void mapeo::mapear(float *xw, float *yw, int *xpV, int &ypV, int L, int M)
 {
     float sX, sY;
     sX =  (xpVmax - xpVmin) / (xWmax - xWmin);
-//    cout<<"Escalacion en X = "<<sX<<endl;
     sY = (ypVmax - ypVmin) / (yWmax - yWmin);
-//    cout<<"Escalación en Y ="<<sY<<endl;
     *xpV = int(round(sX * (*xw-xWmin) + xpVmin)+L);
     ypV = int(round(sY * (yWmin - *yw) - ypVmin)+ M);
-
-// NOTA:  L y M REPRESENTAN EL ORIGEN A PARTIR
-//              DEL CUAL VAMOS A DIBUJAR
-
 }
