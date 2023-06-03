@@ -10,9 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
+    mapeo.cpp \
+    matrix.cpp \
     widget.cpp
 
 HEADERS += \
+    mapeo.h \
+    matrix.h \
     widget.h
 
 FORMS += \
