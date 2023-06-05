@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <set>
 #include <QTimer>
+#include <QPolygon>
 
 #include "mapeo.h"
 #include "matrix.h"
@@ -54,5 +55,9 @@ private:
     int centralX,centralY;
     QTimer *rotateTimer;
     int direction;
+
+    QPolygon polyAim;
+    QPainter *polygonCanvas;
+    bool fillPolyAim;
 };
 #endif // WIDGET_H

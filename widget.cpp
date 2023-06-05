@@ -39,6 +39,14 @@ void Widget::asignAim(){
     starAim[6][0] = 125; starAim[6][1] = 100; starAim[6][2] = 1;
     starAim[7][0] = 155; starAim[7][1] = 112.5; starAim[7][2] = 1;
     starAim[8][0] = 125; starAim[8][1] = 125; starAim[8][2] = 1;
+
+    for(int i=0;i<9;i++){
+        int x,y;
+        x = starAim[i][0];
+        y = starAim[i][1];
+
+        polyAim << QPoint(x,y);
+    }
 }
 
 void Widget::drawAim()
@@ -50,13 +58,27 @@ void Widget::drawAim()
     dibujo.puerto(0,0, size().width(), size().height());
 
     int x1, y1, x2, y2;
+    int x,y;
 
     for(int i = 0; i < 8; i++){
         dibujo.mapear( &starAim[i][0], &starAim[i][1],&x1, y1, L, M );
         //qDebug()<<"x1: "<<x1<<"     y1"<<y1<<'\n';
+        x = x1;
+        y = y1;
+        polyAim[i] = QPoint(x,y);
+
         dibujo.mapear(&starAim[i+1][0], &starAim[i+1][1],&x2, y2, L, M);
         //qDebug()<<"x2: "<<x2<<"     y2"<<y2<<'\n';
+        x = x2;
+        y = y2;
+        polyAim[i+1] = QPoint(x,y);
+
         canvas->drawLine(x1, y1, x2, y2);
+    }
+
+    if(fillPolyAim){
+        canvas->setBrush(Qt::red);
+        canvas->drawPolygon(polyAim);
     }
 
     //dibujo.mapear(&starAim[1][0], &starAim[1][1],&centralX,centralY,L, M);
@@ -150,6 +172,11 @@ void Widget::mousePressEvent(QMouseEvent *evt)
         direction=1;
         rotateTimer->start(15);
     }
+
+    if(evt->button()==Qt::LeftButton){
+        fillPolyAim = true;
+        repaint();
+    }
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *evt)
@@ -157,5 +184,10 @@ void Widget::mouseReleaseEvent(QMouseEvent *evt)
     if(evt->button()==Qt::RightButton){
         direction =-1;
         rotateTimer->start(15);
+    }
+
+    if(evt->button()==Qt::LeftButton){
+        fillPolyAim = false;
+        repaint();
     }
 }
