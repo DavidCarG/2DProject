@@ -11,6 +11,7 @@ Widget::Widget(QWidget *parent)
     M = 400;
     Tx = Ty = 0;
     speed = 40;
+    direction =1 ;
 
     rotateTimer = new QTimer();
     connect(rotateTimer,SIGNAL(timeout()),this,SLOT(rotate()));
@@ -116,7 +117,7 @@ void Widget::rotate()
         rotateTimer->stop();
     }
     cont++;
-    int angle =18;
+    int angle =18*direction;
     Matrix fig,id,fres;
 
     centralX = starAim[1][0];
@@ -146,6 +147,15 @@ void Widget::rotate()
 void Widget::mousePressEvent(QMouseEvent *evt)
 {
     if(evt->button()==Qt::RightButton){
-        rotateTimer->start(35);
+        direction=1;
+        rotateTimer->start(15);
+    }
+}
+
+void Widget::mouseReleaseEvent(QMouseEvent *evt)
+{
+    if(evt->button()==Qt::RightButton){
+        direction =-1;
+        rotateTimer->start(15);
     }
 }

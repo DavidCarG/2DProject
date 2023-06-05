@@ -31,7 +31,9 @@ public:
     void translate(int Tx, int Ty);
     void keyPressEvent(QKeyEvent * evt) override;
     void keyReleaseEvent(QKeyEvent *evt) override;
+
     void mousePressEvent(QMouseEvent *evt) override;
+    void mouseReleaseEvent(QMouseEvent *evt) override;
 
 private slots:
 
@@ -51,5 +53,6 @@ private:
 
     int centralX,centralY;
     QTimer *rotateTimer;
+    int direction;
 };
 #endif // WIDGET_H
