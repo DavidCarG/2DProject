@@ -3,6 +3,11 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QtGui>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <set>
+#include <QTimer>
 
 #include "mapeo.h"
 #include "matrix.h"
@@ -23,6 +28,15 @@ public:
     void asignAim();
     void drawAim();
 
+    void translate(int Tx, int Ty);
+    void keyPressEvent(QKeyEvent * evt) override;
+    void keyReleaseEvent(QKeyEvent *evt) override;
+    void mousePressEvent(QMouseEvent *evt) override;
+
+private slots:
+
+    void rotate();
+
 private:
     Ui::Widget *ui;
 
@@ -31,5 +45,11 @@ private:
     float starAimBU[9][3];
 
     int L,M;
+
+    set<int>pressedKeys;
+    int Tx,Ty,speed;
+
+    int centralX,centralY;
+    QTimer *rotateTimer;
 };
 #endif // WIDGET_H

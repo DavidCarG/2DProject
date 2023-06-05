@@ -244,17 +244,17 @@ Matrix &Matrix::rotacion(Matrix fig, Matrix id, float grados)
 
 Matrix &Matrix::rotacionPuntoPivote(Matrix id, Matrix fig, float angulo, float pPx, float pPy)
 {
-    id.Identidad();
-    float radianes = angulo*M_PI/180.0;
+//    id.Identidad();
+//    float radianes = angulo*M_PI/180.0;
 
-    float r20 = pPx*(1-cos(radianes)+pPy*sin(radianes));
-    float r21 = pPy*(1-cos(radianes)-pPx*sin(radianes));
+//    float r20 = pPx + (x - pPx) * cos(angle) - (y - pPy) * sin(angle);
+//    float r21 = pPy*(1-cos(radianes)-pPx*sin(radianes));
 
-    id.SET(2,0,r20);
-    id.SET(2,1,r21);
+//    id.SET(2,0,r20);
+//    id.SET(2,1,r21);
 
-    fig*=id;
-    asignar(fig);
+//    fig*=id;
+//    asignar(fig);
     return *this;
 }
 

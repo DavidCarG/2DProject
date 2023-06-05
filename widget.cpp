@@ -9,6 +9,11 @@ Widget::Widget(QWidget *parent)
     asignAim();
     L = 100;
     M = 400;
+    Tx = Ty = 0;
+    speed = 40;
+
+    rotateTimer = new QTimer();
+    connect(rotateTimer,SIGNAL(timeout()),this,SLOT(rotate()));
 }
 
 Widget::~Widget()
@@ -17,6 +22,7 @@ Widget::~Widget()
 }
 
 void Widget::paintEvent(QPaintEvent *evt){
+    Q_UNUSED(evt)
     canvas = new QPainter(this);
     drawAim();
     canvas->end();
@@ -44,12 +50,102 @@ void Widget::drawAim()
 
     int x1, y1, x2, y2;
 
-    // Demostrar cómo funciona este ciclo
     for(int i = 0; i < 8; i++){
         dibujo.mapear( &starAim[i][0], &starAim[i][1],&x1, y1, L, M );
-        qDebug()<<"x1: "<<x1<<"     y1"<<y1<<'\n';
+        //qDebug()<<"x1: "<<x1<<"     y1"<<y1<<'\n';
         dibujo.mapear(&starAim[i+1][0], &starAim[i+1][1],&x2, y2, L, M);
-        qDebug()<<"x2: "<<x2<<"     y2"<<y2<<'\n';
+        //qDebug()<<"x2: "<<x2<<"     y2"<<y2<<'\n';
         canvas->drawLine(x1, y1, x2, y2);
+    }
+
+    //dibujo.mapear(&starAim[1][0], &starAim[1][1],&centralX,centralY,L, M);
+}
+
+void Widget::translate(int Tx, int Ty)
+{
+    Matrix fig, id, figtransf;
+
+     fig.Inicializa(9,3);
+     id.Inicializa(3,3);
+     figtransf.Inicializa(9,3);
+
+     for(int i = 0; i < fig.numRen(); i++){
+         for(int j = 0; j < fig.numCol(); j++){
+             fig.SET(i,j, starAim[i][j]);
+
+         }
+
+     }
+
+     figtransf.traslacion(fig,id,Tx,Ty);
+
+     for(int r = 0; r < figtransf.numRen(); r++){
+         for(int c = 0; c < figtransf.numCol(); c++){
+             starAim[r][c] = figtransf.GET(r,c);
+         }
+     }
+     this->update();
+}
+
+void Widget::keyPressEvent(QKeyEvent *evt) {
+    pressedKeys.insert(evt->key());
+
+    if (pressedKeys.count(Qt::Key_D))
+        translate(Tx + speed, 0);
+
+    if (pressedKeys.count(Qt::Key_A))
+        translate(Tx - speed, 0);
+
+    if (pressedKeys.count(Qt::Key_W))
+        translate(0, Ty + speed);
+
+    if (pressedKeys.count(Qt::Key_S))
+        translate(0, Ty - speed);
+}
+
+void Widget::keyReleaseEvent(QKeyEvent *evt)
+{
+    pressedKeys.erase(evt->key());
+}
+
+void Widget::rotate()
+{
+    static int cont = 1;
+    if(cont>=5){
+        cont=0;
+        rotateTimer->stop();
+    }
+    cont++;
+    int angle =18;
+    Matrix fig,id,fres;
+
+    centralX = starAim[1][0];
+    centralY = starAim[1][1];
+
+    fig.Inicializa(9,3);
+    id.Inicializa(3,3);
+    fres.Inicializa(9,3);
+
+    for(int i=0;i<fig.numRen();i++){
+        for(int j=0;j<fig.numCol();j++){
+            fig.SET(i,j,starAim[i][j]);
+        }
+    }
+
+    fres.rotacion(fig,id,angle);
+
+    for(int r=0;r<fres.numRen();r++){
+        for(int c=0;c<fres.numCol();c++){
+            starAim[r][c] = fres.GET(r,c);
+        }
+    }
+
+    translate(centralX-starAim[1][0],centralY-starAim[1][1]);
+}
+
+void Widget::mousePressEvent(QMouseEvent *evt)
+{
+    if(evt->button()==Qt::RightButton){
+        rotateTimer->start(35);
     }
 }
